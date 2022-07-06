@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+  db-mysql:
+    image: mysql:8.0.29
+    container_name: yaml4docker_db-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlAdm1n
+    volumes:
+      - "yaml4docker_db-mysql-data:/var/lib/mysql"
+      - "./db-mysql/my.cnf:/root/.my.cnf"
+    ports:
+      - "3306:3306"
+    networks:
+      - yaml4docker_backend
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+
+  db-phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.0
+    container_name: yaml4docker_db-phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    ports:
+      - 8001:80
+    networks:
+      - yaml4docker_backend
+      - yaml4docker_frontend
+    restart: on-failure
+
+networks:
+  yaml4docker_frontend:
+    external: true
+  yaml4docker_backend:
+    external: true
+
+volumes:
+  yaml4docker_db-mysql-data:
+    external: true

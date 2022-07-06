@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  portainer:
+    image: portainer/portainer-ce:2.14.0
+    container_name: yaml4docker_mon-portainer
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "yaml4docker_mon-portainer-data:/data"
+    ports:
+      - "8000:8000"
+      - "9443:9443"
+      - "9000:9000"
+    command: --admin-password '$$2y$$05$$yGzDb0mwV4McYn1TI1MsVeQnfLOKiDl022s4lvWgZt56UkxdrAoxa'
+    restart: on-failure
+
+volumes:
+  yaml4docker_mon-portainer-data:
+    external: true

@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+  web-institucional:
+    image: joomla:4.1.5
+    container_name: yaml4docker_web-institucional
+    environment:
+      JOOMLA_DB_HOST: yaml4docker_db-mysql
+      JOOMLA_DB_NAME: web_institucional
+      JOOMLA_DB_USER: web_institucional
+      JOOMLA_DB_PASSWORD: supersecret
+    volumes:
+      - "yaml4docker_web-institucional-html:/var/www/html"
+    ports:
+      - 8002:80
+    networks:
+      - yaml4docker_backend
+      - yaml4docker_frontend
+    restart: on-failure
+
+  web-ch:
+    image: "wordpress:6.0.0"
+    container_name: yaml4docker_web-ch
+    environment:
+      WORDPRESS_DB_HOST: yaml4docker_db-mysql
+      WORDPRESS_DB_NAME: web_ch
+      WORDPRESS_DB_USER: web_ch
+      WORDPRESS_DB_PASSWORD: "supersecret"
+    volumes:
+      - yaml4docker_web-ch-html:/var/www/html
+    ports:
+      - 8003:80
+    networks:
+      - yaml4docker_backend
+      - yaml4docker_frontend
+    restart: on-failure
+
+volumes:
+  yaml4docker_web-institucional-html:
+    external: true
+  yaml4docker_web-ch-html:
+    external: true
+
+networks:
+  yaml4docker_frontend:
+    external: true
+  yaml4docker_backend:
+    external: true
